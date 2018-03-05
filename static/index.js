@@ -74,14 +74,8 @@ function init(sample) {
 			}];
 			//set up layout
 			var pieLayout = {
-				// width: 675,
-				margin: {
-					top: 10,
-					bottom: 10,
-					right: 10,
-					left: 10
-				},
-				height: 500,
+				height: 600,
+				width: 1000,
 			};
 			// plot pie chart
 			Plotly.newPlot("pie", pieData, pieLayout);
@@ -102,18 +96,11 @@ function init(sample) {
 			}];
 			//set layout
 			var bubbleLayout = {
-				title: sample,
-				hovermode: 'closest',
 				showlegend: false,
 				height: 600,
-				// width: 1200
-				margin: {
-					top: 10,
-					bottom: 10,
-					right: 10,
-					left: 10
-				}
-
+				witdh: 800,
+				hovermode: 'closest'
+	
 			};
 			//plot bubble chart
 			Plotly.newPlot('bubble', bubbleData, bubbleLayout);
