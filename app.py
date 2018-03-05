@@ -74,10 +74,24 @@ def metadata(sample):
 @app.route("/wfreq/<sample>")
 def wfreq(sample):
     results = session.query(metadata_s.WFREQ).filter(metadata_s.SAMPLEID == sample).all()
-    wfreq_int = np.ravel(results)
+    wfreq_int = results[0]
 
-    return jsonify(int(wfreq_int))
+    return jsonify(wfreq_int)
 
+@app.route('/samples/<sample>')
+def sample_otu(sample):
+    query = session.query(samples).statement
+    otu_df = pd.read_sql_query(query, session.bind)
+
+    otu_df = otu_df.sort_values(by=sample, ascending=0)
+
+    data = [{
+        "otu_ids": otu_df[sample].index.values.tolist(),
+        "sample_values": otu_df[sample].values.tolist()
+    }]
+
+    return jsonify(data)
 
 if __name__ == "__main__":
     app.run(debug=True)
+    
