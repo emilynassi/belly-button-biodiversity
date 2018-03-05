@@ -49,6 +49,9 @@ function init(sample) {
 		//Grab slice of top 10 values
 		var otuId = samplesResponse[0]["otu_ids"].slice(0, 10)
 		var sampleValues = samplesResponse[0]["sample_values"].slice(0, 10)
+		//set x and y axis for bubble plot later
+		var xaxis = samplesResponse[0]["otu_ids"]
+		var yaxis = samplesResponse[0]["sample_values"]
 
 		console.log(otuId, sampleValues);
 
@@ -82,8 +85,8 @@ function init(sample) {
 
 			//set up data for bubble plot
 			var bubbleData = [{
-				x: samplesResponse[0]["otu_ids"],
-				y: samplesResponse[0]["sample_values"],
+				x: xaxis,
+				y: yaxis,
 				mode: 'markers',
 				hovertext: otuDescription,
 				marker: {
@@ -100,7 +103,7 @@ function init(sample) {
 				height: 600,
 				witdh: 800,
 				hovermode: 'closest'
-	
+
 			};
 			//plot bubble chart
 			Plotly.newPlot('bubble', bubbleData, bubbleLayout);
@@ -108,16 +111,73 @@ function init(sample) {
 		})
 	});
 }
-//create function to restyle plots when new sample is selected
-function updatePlots(newdata) {
+//create functions to restyle plots when new sample is selected
+function updatePie(newSampleValues, newotuId, newSample) {
 	//update pie chart
 	var PIE = document.getElementById("pie");
-	Plotly.restyle(PIE, "values", [newPiedata]);
+	Plotly.restyle(PIE, "values", [newSampleValues]);
+	Plotly.restyle(PIE, "labels", [newotuId])
+};
+
+function updateBubble(newX, newY, newSample) {
 	//update bubble plot
-	var BUBBLE = document.getElementById("pie");
-	Plotly.restyle(BUBBLE, "values", [newBubbledata]);
-  };
+	var BUBBLE = document.getElementById("bubble");
+	Plotly.restyle(BUBBLE, "x", [newX]);
+	Plotly.restyle(BUBBLE, "y", [newY]);
 
+};
 
+function optionChanged(newSample) {
+	//Get data from metadata route
+	//use only second half of id 
+	const sampleId = newSample.split("_").pop();
+	Plotly.d3.json(`/metadata/${sampleId}`, function (error, response) {
+		if (error) return console.warn(error);
+
+		console.dir(response);
+
+		var metadataResponse = Object.keys(response);
+		var sampleMetadataDiv = document.querySelector("#sampleMetadata");
+		sampleMetadataDiv.innerHTML = null;
+
+		//loop through response to get key value pairs to print in div
+		for (var i = 0; i < metadataResponse.length; i++) {
+			var key = document.createElement('p');
+			key.innerHTML = metadataResponse[i] + ": " + response[metadataResponse[i]];
+			sampleMetadataDiv.appendChild(key)
+		};
+	});
+
+	//Get data from sample route
+	Plotly.d3.json(`/samples/${newSample}`, function (error, response) {
+		if (error) return console.warn(error);
+
+		//console.log(samplesResponse);
+
+		//Grab slice of top 10 values
+		var newotuId = response[0]["otu_ids"].slice(0, 10)
+		var newsampleValues = response[0]["sample_values"].slice(0, 10)
+		//new x and y axis variables
+		var newX = response[0]["otu_ids"]
+		var newY = response[0]["sample_values"]
+
+		console.log(newotuId, newsampleValues);
+
+		//get data from otu route
+		Plotly.d3.json("/otu", function (error, otuResponse) {
+
+			if (error) return console.warn(error);
+
+			console.log(otuResponse);
+
+			var otuDescription = []
+			for (var i = 0; i < newotuId.length; i++) {
+				otuDescription.push(otuResponse[newotuId[i]])
+			}
+			updatePie(newsampleValues, newotuId, newSample);
+			updateBubble(newX, newY, newSample);
+		})
+	})
+};
 init(initSample);
 dropDownEvent();
