@@ -26,7 +26,7 @@ function init(sample) {
 	Plotly.d3.json(`/metadata/${sampleId}`, function (error, response) {
 		if (error) return console.warn(error);
 
-		console.dir(response);
+		//console.dir(response);
 
 		var metadataResponse = Object.keys(response);
 		var sampleMetadataDiv = document.querySelector("#sampleMetadata");
@@ -44,7 +44,7 @@ function init(sample) {
 	Plotly.d3.json(`/samples/${sample}`, function (error, samplesResponse) {
 		if (error) return console.warn(error);
 
-		console.log(samplesResponse);
+		//console.log(samplesResponse);
 
 		//Grab slice of top 10 values
 		var otuId = samplesResponse[0]["otu_ids"].slice(0, 10)
@@ -53,7 +53,7 @@ function init(sample) {
 		var xaxis = samplesResponse[0]["otu_ids"]
 		var yaxis = samplesResponse[0]["sample_values"]
 
-		console.log(otuId, sampleValues);
+		//console.log(otuId, sampleValues);
 
 
 		//get data from otu route
@@ -61,7 +61,7 @@ function init(sample) {
 
 			if (error) return console.warn(error);
 
-			console.log(otuResponse);
+			//console.log(otuResponse);
 
 			var otuDescription = []
 			for (var i = 0; i < otuId.length; i++) {
@@ -120,7 +120,7 @@ function updateGauge(sample) {
 
 	if (error) return console.warn(error);
 
-	console.log(wfreqResponse);
+	//console.log(wfreqResponse);
 
 	//set up layout for gauge chart and multiply by 20 for accurate position
 	var level = wfreqResponse * 20;
@@ -223,15 +223,6 @@ function updateBubble(newX, newY, newSample) {
 
 };
 
-/*function updateGauge(newSample) {
-	//update bubble plot
-	var GAUGE = document.getElementById("gauge");
-	
-	Plotly.restyle(GAUGE, data, layout);
-
-};
-*/
-
 function optionChanged(newSample) {
 	//Get data from metadata route
 	//use only second half of id 
@@ -266,14 +257,14 @@ function optionChanged(newSample) {
 		var newX = response[0]["otu_ids"]
 		var newY = response[0]["sample_values"]
 
-		console.log(newotuId, newsampleValues);
+		//console.log(newotuId, newsampleValues);
 
 		//get data from otu route
 		Plotly.d3.json("/otu", function (error, otuResponse) {
 
 			if (error) return console.warn(error);
 
-			console.log(otuResponse);
+		//console.log(otuResponse);
 
 			var otuDescription = []
 			for (var i = 0; i < newotuId.length; i++) {
