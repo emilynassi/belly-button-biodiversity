@@ -74,7 +74,7 @@ def metadata(sample):
 @app.route("/wfreq/<sample>")
 def wfreq(sample):
     results = session.query(metadata_s.WFREQ).filter(metadata_s.SAMPLEID == sample).all()
-    wfreq_int = results[0]
+    wfreq_int = results[0][0]
 
     return jsonify(wfreq_int)
 
