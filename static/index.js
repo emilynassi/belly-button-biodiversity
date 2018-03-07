@@ -73,12 +73,12 @@ function init(sample) {
 				values: sampleValues,
 				labels: otuId,
 				hovertext: otuDescription,
-				type: 'pie'
+				type: 'pie',
 			}];
 			//set up layout
 			var pieLayout = {
 				height: 600,
-				width: 1000,
+				width: 600,
 			};
 			// plot pie chart
 			Plotly.newPlot("pie", pieData, pieLayout);
@@ -101,7 +101,7 @@ function init(sample) {
 			var bubbleLayout = {
 				showlegend: false,
 				height: 600,
-				witdh: 800,
+				width: 825,
 				hovermode: 'closest'
 
 			};
